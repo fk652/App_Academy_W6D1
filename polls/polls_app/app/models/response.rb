@@ -11,6 +11,10 @@
 class Response < ApplicationRecord
   validates :user_id, :answer_choice_id, presence: true
 
+  def sibling_responses
+    self.question.responses.where.not(id: self.id)
+  end
+
   belongs_to :answer_choice,
     primary_key: :id,
     foreign_key: :answer_choice_id,
@@ -20,4 +24,8 @@ class Response < ApplicationRecord
     primary_key: :id,
     foreign_key: :user_id,
     class_name: :User
+
+  has_one :question,
+    through: :answer_choice,
+    source: :question
 end
